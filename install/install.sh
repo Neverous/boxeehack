@@ -14,13 +14,14 @@ umount -f /opt/boxee/skin
 umount -f /opt/boxee/media/boxee_screen_saver
 umount -f /opt/boxee/skin/boxee/720p
 umount -f /opt/boxee/visualisations/projectM
+umount -f /etc
 
 echo $BASEDIR/hack
 
 if [ -d "$BASEDIR/hack" ];
 then
     # install the version from the USB drive
-	rm -Rf /data/hack
+    rm -Rf /data/hack
     cp -R "$BASEDIR/hack" /data/
 else
     # download the latest version from github
@@ -51,10 +52,17 @@ mv /data/hack/advancedsettings.xml /data/.boxee/UserData/advancedsettings.xml
 touch /data/etc/boxeehal.conf
 touch /data/.boxee/UserData/guisettings.xml
 
-# set a password if one does not yet exist
-if ! [ -f /data/etc/passwd ]; then
-	echo "secret" > /data/etc/passwd
-fi
+# Make root home directory
+mkdir -p /data/root
+chmod 0644 /data/root
+
+# Copy /etc to make it writable and add passwd/shadow with passwords
+if [ ! -d /data/hack-etc ];
+then
+    cp -ar /etc /data/hack-etc
+    cp /data/hack/conf/passwd /data/hack-etc/passwd
+    cp /data/hack/conf/shadow /data/hack-etc/shadow
+fi;
 
 # turn the logo back to green
 sleep 5
