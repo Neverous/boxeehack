@@ -9,6 +9,9 @@ dtool 6 2 0 0
 # stop Boxee from running and screwing things up
 killall U99boxee; killall BoxeeLauncher; killall run_boxee.sh; killall Boxee; killall BoxeeHal
 
+# stop dropbear
+killall dropbear
+
 # cleanup some old stuff first
 umount -f /opt/boxee/skin
 umount -f /opt/boxee/media/boxee_screen_saver
@@ -60,9 +63,15 @@ chmod 0644 /data/root
 if [ ! -d /data/hack-etc ];
 then
     cp -ar /etc /data/hack-etc
-    cp /data/hack/conf/passwd /data/hack-etc/passwd
-    cp /data/hack/conf/shadow /data/hack-etc/shadow
+    cp /data/hack/etc/passwd /data/hack-etc/passwd
+    cp /data/hack/etc/shadow /data/hack-etc/shadow
 fi;
+
+# fix possibly broken dropbear links
+ln -s dropbearmulti /data/hack/bin/dropbearkey
+ln -s dropbearmulti /data/hack/bin/dropbear
+ln -s dropbearmulti /data/hack/bin/dbclient
+ln -s dropbearmulti /data/hack/bin/scp
 
 # turn the logo back to green
 sleep 5
