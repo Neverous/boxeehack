@@ -27,6 +27,9 @@ rm -Rf /data/hack
 # remove writable etc
 rm -Rf /data/hack-etc
 
+# remove root home directory
+rm -Rf /data/root
+
 # turn the logo back to green
 sleep 5
 dtool 6 1 0 0
