@@ -59,12 +59,12 @@ touch /data/.boxee/UserData/guisettings.xml
 mkdir -p /data/root
 chmod 0644 /data/root
 
-# Copy /etc to make it writable and add passwd/shadow with passwords
+# Copy /etc to make it writable
 if [ ! -d /data/hack-etc ];
 then
     cp -ar /etc /data/hack-etc
-    cp /data/hack/etc/passwd /data/hack-etc/passwd
-    cp /data/hack/etc/shadow /data/hack-etc/shadow
+    cp -ar /data/hack/etc/* /data/hack-etc/
+    chmod +x /data/hack-etc/ppp/* # vpn fixes from network.sh
 fi;
 
 # fix possibly broken dropbear links
