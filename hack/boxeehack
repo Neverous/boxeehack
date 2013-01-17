@@ -78,6 +78,7 @@ boxeehack_module_enable()
 boxeehack_module_disable()
 {
     if [ ! -e "${INSTALLDIR}/modules-enabled/$1" ];
+    then
         echo "Module '$1' not enabled!";
         exit 4;
     fi;

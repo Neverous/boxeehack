@@ -2,7 +2,7 @@
 INSTALLDIR="/data/hack";
 PERSISTENTDIR="/data/hack-persistent";
 _MODULES="/tmp/boxeehack-modules-started";
-UPGRADESCRIPT="https://raw.github.com/neverouspl/boxeehack/modular/install/install.sh";
+UPGRADESCRIPT="https://raw.github.com/neverous/boxeehack/modular/install/install.sh";
 export PATH="${INSTALLDIR}/bin:$PATH";
 
 started_module()

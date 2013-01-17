@@ -2,7 +2,7 @@
 
 BASEDIR=`dirname $0`;
 INSTALLDIR="/data/hack";
-SOURCE="https://github.com/neverouspl/boxeehack/archive/modular.zip":
+SOURCE="https://github.com/neverous/boxeehack/archive/modular.zip":
 SOURCE_NAME="boxeehack-modular";
 
 # turn the logo red to indicate we're working
