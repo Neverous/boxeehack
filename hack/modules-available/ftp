@@ -1,0 +1,29 @@
+#!/bin/sh
+# requires: writable_etc;
+. ${CONFIG};
+
+module_start()
+{
+    require_modules "writable_etc";
+    nohup tcpsvd -vE 0.0.0.0 21 ftpd -w ${PERSISTENTDIR} > /dev/null &
+    started_module "ftp";
+}
+
+module_stop()
+{
+    killall ftpd;
+    stopped_module "ftp";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable|disable)
+    ;;
+esac;

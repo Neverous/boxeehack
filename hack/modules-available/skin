@@ -1,0 +1,27 @@
+#!/bin/sh
+. ${CONFIG};
+
+module_start()
+{
+    mount -o bind ${INSTALLDIR}/data/boxee/skin/boxee/720p /opt/boxee/skin/boxee/720p &&
+        started_module "skin";
+}
+
+module_stop()
+{
+    umount -f /opt/boxee/skin/boxee/720p &&
+        stopped_module "skin";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable|disable)
+    ;;
+esac;

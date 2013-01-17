@@ -1,0 +1,29 @@
+#!/bin/sh
+# requires: writable_etc
+. ${CONFIG};
+
+module_start()
+{
+    require_modules "writable_etc";
+    telnetd -p 2323 -l ${INSTALLDIR}/data/telnet &
+    started_module "telnet";
+}
+
+module_stop()
+{
+    killall telnetd;
+    stopped_module "telnet";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable|disable)
+    ;;
+esac;

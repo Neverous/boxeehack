@@ -1,0 +1,48 @@
+#!/bin/sh
+#!/bin/sh
+. ${CONFIG};
+PPPDIR=${PERSISTENTDIR}/ppp_mnt:
+
+module_start()
+{
+    require_modules "writable_etc";
+    mount -o bind ${PPPDIR} /etc/ppp &&
+        started_module "network";
+}
+
+module_stop()
+{
+    umount -f /etc/ppp &&
+        stopped_module "network";
+}
+
+module_enable()
+{
+    mkdir -p ${PPPDIR};
+    cp -R /etc/ppp/* ${PPPDIR};
+    cp -R ${INSTALLDIR}/data/ppp/* ${PPPDIR};
+    chmod +x ${PPPDIR}/*;
+}
+
+module_disable()
+{
+    rm -Rf ${PPPDIR};
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable)
+        module_enable;
+    ;;
+
+    disable)
+        module_disable;
+    ;;
+esac;

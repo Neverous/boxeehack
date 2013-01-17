@@ -1,0 +1,27 @@
+#!/bin/sh
+. ${CONFIG};
+
+module_start()
+{
+    mount -o bind ${INSTALLDIR}/data/projectm /opt/boxee/visualisations/projectM &&
+        started_module "visualiser";
+}
+
+module_stop()
+{
+    umount -f /opt/boxee/visualisations/projectM &&
+        stopped_module "visualiser";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable|disable)
+    ;;
+esac;

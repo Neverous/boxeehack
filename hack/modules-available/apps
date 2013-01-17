@@ -1,0 +1,26 @@
+#!/bin/sh
+. ${CONFIG};
+
+module_enable()
+{
+    cp -R ${INSTALLDIR}/data/apps/* /data/.boxee/UserData/apps/
+}
+
+case "$1" in
+    start)
+        echo "NOTICE: this module only installs apps.";
+        started_module "apps";
+    ;;
+
+    stop)
+        stopped_module "apps";
+    ;;
+
+    enable)
+        module_enable;
+    ;;
+
+    disable)
+        echo "WARNING: disabling not available!";
+    ;;
+esac;

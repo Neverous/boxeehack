@@ -1,0 +1,27 @@
+#!/bin/sh
+. ${CONFIG};
+
+module_start()
+{
+    mount -o bind ${INSTALLDIR}/data/boxee/scripts/OpenSubtitles /opt/boxee/scripts/OpenSubtitles &&
+        started_module "subtitles";
+}
+
+module_stop()
+{
+    umount -f /opt/boxee/scripts/OpenSubtitles &&
+        stopped_module "subtitles";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable|disable)
+    ;;
+esac;

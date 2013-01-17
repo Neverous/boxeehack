@@ -1,0 +1,29 @@
+#!/bin/sh
+. ${CONFIG};
+
+module_start()
+{
+    dtool 6 1 0 0;
+    dtool 6 2 0 50;
+    started_module "logo";
+}
+
+module_stop()
+{
+    dtool 6 1 0 0;
+    dtool 6 2 0 100;
+    stopped_module "logo";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable|disable)
+    ;;
+esac;

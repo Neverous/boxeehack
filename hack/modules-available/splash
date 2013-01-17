@@ -1,0 +1,51 @@
+#!/bin/sh
+. ${CONFIG};
+SPLASHDIR=${PERSISTENTDIR}/splash
+
+module_enable()
+{
+    if [ ! -d ${SPLASHDIR} ];
+    then
+        mkdir -p ${SPLASHDIR}/Fonts;
+        cp -R ${INSTALLDIR}/data/splash/* ${SPLASH};
+        cp -R /opt/boxee/media/Fonts/* ${SPLASH}/Fonts/;
+    fi;
+}
+
+module_disable()
+{
+    if [ -d ${SPLASHDIR} ];
+    then
+        rm -Rf ${SPLASHDIR};
+    fi;
+}
+
+module_start()
+{
+    mount -o bind ${SPLASHDIR} /opt/boxee/media &&
+        started_module "splash";
+}
+
+module_stop()
+{
+    umount -f /opt/boxee/media &&
+        stopped_module "splash";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable)
+        module_enable;
+    ;;
+
+    disable)
+        module_disable;
+    ;;
+esac;
