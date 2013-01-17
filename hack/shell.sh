@@ -1,3 +1,3 @@
 #!/bin/sh
 cat /etc/motd
-/data/hack/bin/sh-wrapper
+/data/hack/bin/login
