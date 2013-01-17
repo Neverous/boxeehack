@@ -1,0 +1,6 @@
+#!/bin/sh
+. `dirname $0`/../config;
+export LD_LIBRARY_PATH=".:${INSTALLDIR}/data/lib:/opt/local/lib:/usr/local/lib:/usr/lib:/lib:/lib/gstreamer-0.10:/opt/local/lib/qt";
+export ENV="/data/etc/.profile";
+export TERM="linux";
+/bin/sh "$@";

@@ -1,0 +1,51 @@
+#!/bin/sh
+. ${CONFIG};
+ETCDIR=${PERSISTENTDIR}/etc
+
+module_start()
+{
+    mount -o bind ${ETCDIR} /etc &&
+        started_module "writable_etc";
+}
+
+module_stop()
+{
+    umount -f /etc &&
+        stopped_module "writable_etc";
+}
+
+module_enable()
+{
+    # Make root home directory
+    mkdir -p /data/root
+    chmod 0644 /data/root
+
+    # Copy /etc to make it writable
+    if [ ! -d ${ETCDIR} ];
+    then
+        cp -ar /etc ${ETCDIR}
+        cp -ar ${INSTALLDIR}/data/etc/* ${ETCDIR}
+    fi;
+}
+
+module_disable()
+{
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable)
+        module_enable;
+    ;;
+
+    disable)
+        module_disable;
+    ;;
+esac;

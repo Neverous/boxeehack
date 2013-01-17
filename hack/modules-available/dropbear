@@ -1,0 +1,47 @@
+#!/bin/sh
+# requires: writable_etc
+. ${CONFIG};
+DROPBEARDIR=/etc/dropbear
+
+module_start()
+{
+    require_modules "writable_etc";
+    [ -d ${DROPBEARDIR} ] || mkdir -p ${DROPBEARDIR};
+    [ -f ${DROPBEARDIR}/dropbear_rsa_host_key ] || dropbearkey -t rsa -f ${DROPBEARDIR}/dropbear_rsa_host_key;
+    [ -f ${DROPBEARDIR}/dropbear_dss_host_key ] || dropbearkey -t dss -f ${DROPBEARDIR}/dropbear_dss_host_key;
+    dropbear &
+    started_module "dropbear";
+}
+
+module_stop()
+{
+    killall dropbear;
+    stopped_module "dropbear";
+}
+
+module_enable()
+{
+}
+
+module_disable()
+{
+    rm -Rf ${DROPBEARDIR};
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable)
+        module_enable;
+    ;;
+
+    disable)
+        module_disable;
+    ;;
+esac;
