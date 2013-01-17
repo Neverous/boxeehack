@@ -1,0 +1,4 @@
+#!/bin/sh
+. `dirname $0`/../config;
+cat /etc/motd
+${INSTALLDIR}/bin/login
