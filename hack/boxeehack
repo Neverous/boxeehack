@@ -1,24 +1,47 @@
 #!/bin/sh
 . `dirname $0`/config;
-export CONFIG=${INSTALLDIR}/config;
 
 boxeehack_start()
 {
     mkdir -p ${_MODULES};
-    echo "Starting all modules";
-    for module in ${INSTALLDIR}/modules-enabled/*;
-    do
-        ${module} start &
-    done;
+    if [ -z "$1" ];
+    then
+        echo "Starting all modules";
+        for module in ${INSTALLDIR}/modules-enabled/*;
+        do
+            CONFIG=${INSTALLDIR}/config ${module} start &
+        done;
+
+    elif [ -x "${INSTALLDIR}/modules-enabled/$1" ];
+    then
+        echo "Starting $1 module.";
+        CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 start;
+
+    else
+        echo "Invalid module!";
+        exit 5;
+    fi;
 }
 
 boxeehack_stop()
 {
-    echo "Stopping all modules";
-    for module in ${INSTALLDIR}/modules-enabled/*;
-    do
-        ${module} stop;
-    done;
+    if [ -z "$1" ];
+    then
+        echo "Stopping all modules";
+        for module in ${INSTALLDIR}/modules-enabled/*;
+        do
+            CONFIG=${INSTALLDIR}/config ${module} stop;
+        done;
+
+    elif [ -x "${INSTALLDIR}/modules-enabled/$1" ];
+    then
+        echo "Stopping $1 module.";
+        CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 stop;
+
+    else
+        echo "Invalid module!";
+        exit 6;
+    fi;
 }
 
 boxeehack_install()
@@ -31,7 +54,7 @@ boxeehack_install()
     for module in ${INSTALLDIR}/modules-enabled/*;
     do
         echo "Enabling ${module}...";
-        ${module} enable;
+        CONFIG=${INSTALLDIR}/config ${module} enable;
     done;
 
     cp -aR ${INSTALLDIR}/data/advancedsettings.xml /data/.boxee/UserData/;
@@ -51,8 +74,8 @@ boxeehack_uninstall()
     for module in ${INSTALLDIR}/modules-enabled/*;
     do
         echo "Disabling ${module}...";
-        ${module} stop;
-        ${module} disable;
+        CONFIG=${INSTALLDIR}/config ${module} stop;
+        CONFIG=${INSTALLDIR}/config ${module} disable;
     done;
 
     rm /data/.boxee/UserData/advancedsettings.xml;
@@ -67,35 +90,60 @@ boxeehack_uninstall()
 
 boxeehack_module_enable()
 {
-    if [ -e "${INSTALLDIR}/modules-enabled/$1" ];
+    if [ -z "$1" ];
+    then
+        echo "Module name required!";
+        exit 1;
+    fi;
+
+    if [ ! -x "${INSTALLDIR}/modules-available/$1" ];
+    then
+        echo "Module '$1' doesn't exist!";
+        exit 2;
+    fi;
+
+    if [ -x "${INSTALLDIR}/modules-enabled/$1" ];
     then
         echo "Module '$1' already enabled!";
         exit 3;
     fi;
 
     ln -s ${INSTALLDIR}/modules-available/$1 ${INSTALLDIR}/modules-enabled/;
-    ${INSTALLDIR}/modules-enabled/$1 enable;
+    CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 enable;
 }
 
 boxeehack_module_disable()
 {
-    if [ ! -e "${INSTALLDIR}/modules-enabled/$1" ];
+    if [ -z "$1" ];
+    then
+        echo "Module name required!";
+        exit 1;
+    fi;
+
+    if [ ! -x "${INSTALLDIR}/modules-available/$1" ];
+    then
+        echo "Module '$1' doesn't exist!";
+        exit 2;
+    fi;
+
+    if [ ! -x "${INSTALLDIR}/modules-enabled/$1" ];
     then
         echo "Module '$1' not enabled!";
         exit 4;
     fi;
 
-    ${INSTALLDIR}/modules-enabled/$1 disable;
+    CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 stop;
+    CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 disable;
     rm ${INSTALLDIR}/modules-enabled/$1;
 }
 
 case "$1" in
     start)
-        boxeehack_start;
+        boxeehack_start $2;
     ;;
 
     stop)
-        boxeehack_stop;
+        boxeehack_stop $2;
     ;;
 
     install)
@@ -106,26 +154,11 @@ case "$1" in
         boxeehack_uninstall;
     ;;
 
-    enable|disable)
-        if [ -z "$2" ];
-        then
-            echo "Module name required!";
-            exit 1;
-        fi;
+    enable)
+        boxeehack_module_enable $2;
+    ;;
 
-        if [ ! -x "${INSTALLDIR}/modules-available/$2" ];
-        then
-            echo "Module '$2' doesn't exist!";
-            exit 2;
-        fi;
-
-        if [ "$1" == "enable" ];
-        then
-            boxeehack_module_enable $2;
-
-        elif [ "$1" == "disable" ];
-        then
-            boxeehack_module_disable $2;
-        fi;
+    disable)
+        boxeehack_module_disable $2;
     ;;
 esac;
