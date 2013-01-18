@@ -1,0 +1,95 @@
+#!/bin/sh
+. ${CONFIG};
+PLUGINS=${PERSISTENTDIR}/plugins;
+_PLUGINS=/tmp/boxeehack-plugins-started;
+
+module_start()
+{
+    mkdir -p ${_PLUGINS};
+    if [ -z "$1" ];
+    then
+        echo "Starting all plugins";
+        for plugin in ${PLUGINS}/plugins-enabled/*;
+        do
+            CONFIG=${INSTALLDIR}/data/plugin-config ${plugin} start &
+        done;
+        started_module "plugins";
+
+    elif [ -x "${PLUGINS}/plugins-enabled/$1" ];
+    then
+        echo "Starting $1 plugin.";
+        CONFIG=${INSTALLDIR}/data/plugin-config ${PLUGINS}/plugins-enabled/$1 start;
+
+    else
+        echo "Invalid plugin!";
+        exit 5;
+    fi;
+}
+
+module_stop()
+{
+    if [ -z "$1" ];
+    then
+        echo "Stopping all plugins";
+        for plugin in ${PLUGINS}/plugins-enabled/*;
+        do
+            CONFIG=${INSTALLDIR}/data/plugin-config ${plugin} stop;
+        done;
+        stopped_module "plugins";
+
+    elif [ -x "${PLUGINS}/plugins-enabled/$1" ];
+    then
+        echo "Stopping $1 plugin.";
+        CONFIG=${INSTALLDIR}/data/plugin-config ${PLUGINS}/plugins-enabled/$1 stop;
+
+    else
+        echo "Invalid plugin!";
+        exit 5;
+    fi;
+}
+
+module_enable()
+{
+    if [ -z "$1" ];
+    then
+        if [ ! -d ${PLUGINS} ];
+        then
+            mkdir -p ${PLUGINS}/plugins-enabled;
+            mkdir -p ${PLUGINS}/plugins-available;
+        fi;
+
+        chmod +x ${PLUGINS}/plugins-available/*;
+
+    else
+        ln -s ${PLUGINS}/plugins-available/$1 ${PLUGINS}/plugins-enabled/;
+        CONFIG=${INSTALLDIR}/data/plugin-config ${PLUGINS}/plugins-enabled/$1 enable;
+    fi;
+}
+
+module_disable()
+{
+    if [ -n "$1" ];
+    then
+        CONFIG=${INSTALLDIR}/data/plugin-config ${PLUGINS}/plugins-enabled/$1 stop;
+        CONFIG=${INSTALLDIR}/data/plugin-config ${PLUGINS}/plugins-enabled/$1 disable;
+        rm ${PLUGINS}/plugins-enabled/$1;
+    fi;
+}
+
+case "$1" in
+    start)
+        module_start $2;
+    ;;
+
+    stop)
+        module_stop $2;
+    ;;
+
+    enable)
+        module_enable $2;
+    ;;
+
+    disable)
+        module_disable $2;
+    ;;
+esac;
