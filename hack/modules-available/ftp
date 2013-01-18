@@ -1,5 +1,5 @@
 #!/bin/sh
-# requires: writable_etc;
+# requires: writable_etc
 . ${CONFIG};
 
 module_start()

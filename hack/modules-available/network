@@ -1,7 +1,7 @@
 #!/bin/sh
 #!/bin/sh
 . ${CONFIG};
-PPPDIR=${PERSISTENTDIR}/ppp_mnt:
+PPPDIR=${PERSISTENTDIR}/ppp_mnt;
 
 module_start()
 {
@@ -19,8 +19,8 @@ module_stop()
 module_enable()
 {
     mkdir -p ${PPPDIR};
-    cp -R /etc/ppp/* ${PPPDIR};
-    cp -R ${INSTALLDIR}/data/ppp/* ${PPPDIR};
+    cp -aR /etc/ppp/* ${PPPDIR};
+    cp -aR ${INSTALLDIR}/data/ppp/* ${PPPDIR};
     chmod +x ${PPPDIR}/*;
 }
 

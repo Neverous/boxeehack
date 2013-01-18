@@ -3,7 +3,7 @@
 
 module_enable()
 {
-    cp -R ${INSTALLDIR}/data/apps/* /data/.boxee/UserData/apps/
+    cp -aR ${INSTALLDIR}/data/apps/* /data/.boxee/UserData/apps/
 }
 
 case "$1" in

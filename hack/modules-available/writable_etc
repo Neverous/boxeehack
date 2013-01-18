@@ -23,13 +23,14 @@ module_enable()
     # Copy /etc to make it writable
     if [ ! -d ${ETCDIR} ];
     then
-        cp -ar /etc ${ETCDIR}
-        cp -ar ${INSTALLDIR}/data/etc/* ${ETCDIR}
+        cp -aR /etc ${ETCDIR}
+        cp -aR ${INSTALLDIR}/data/etc/* ${ETCDIR}
     fi;
 }
 
 module_disable()
 {
+    echo "NOTICE: Nothing to disable.";
 }
 
 case "$1" in

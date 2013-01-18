@@ -21,6 +21,7 @@ module_stop()
 
 module_enable()
 {
+    echo "NOTICE: Nothing to prepare.";
 }
 
 module_disable()

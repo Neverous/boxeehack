@@ -1,5 +1,4 @@
 #!/bin/sh
-
 INSTALLDIR="/data/hack";
 
 # turn the logo red to indicate we're working
@@ -22,7 +21,7 @@ rm -Rf ${INSTALLDIR};
 # turn the logo back to green
 sleep 3;
 dtool 6 1 0 0;
-dtool 6 2 0 50:
+dtool 6 2 0 50;
 sleep 2;
 
 # reboot

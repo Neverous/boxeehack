@@ -7,17 +7,14 @@ module_enable()
     if [ ! -d ${SPLASHDIR} ];
     then
         mkdir -p ${SPLASHDIR}/Fonts;
-        cp -R ${INSTALLDIR}/data/splash/* ${SPLASH};
-        cp -R /opt/boxee/media/Fonts/* ${SPLASH}/Fonts/;
+        cp -aR ${INSTALLDIR}/data/splash/* ${SPLASHDIR};
+        cp -aR /opt/boxee/media/Fonts/* ${SPLASHDIR}/Fonts/;
     fi;
 }
 
 module_disable()
 {
-    if [ -d ${SPLASHDIR} ];
-    then
-        rm -Rf ${SPLASHDIR};
-    fi;
+    rm -Rf ${SPLASHDIR};
 }
 
 module_start()

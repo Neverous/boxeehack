@@ -1,8 +1,7 @@
 #!/bin/sh
-
 BASEDIR=`dirname $0`;
 INSTALLDIR="/data/hack";
-SOURCE="https://github.com/neverous/boxeehack/archive/modular.zip":
+SOURCE="https://github.com/neverous/boxeehack/archive/modular.tar.gz";
 SOURCE_NAME="boxeehack-modular";
 
 # turn the logo red to indicate we're working
@@ -22,26 +21,26 @@ fi;
 if [ -d "${INSTALLDIR}" ];
 then
     rm -Rf ${INSTALLDIR}-old;
-    mv ${INSTALLDIR} ${INSTALLDIR}-old:
+    mv ${INSTALLDIR} ${INSTALLDIR}-old;
 fi;
 
 # install version from the USB drive
-if [ -d "${BASEDIR}/boxeehack.zip" ];
+if [ -f "${BASEDIR}/boxeehack.tar.gz" ];
 then
     # cleanup previous data
     rm -Rf /download/boxeehack;
     mkdir -p /download/boxeehack;
 
     # copy compressed version to temporary directory
+    cp -aR ${BASEDIR}/boxeehack.tar.gz /download/boxeehack;
     cd /download/boxeehack;
-    cp ${BASEDIR}/boxeehack.zip ./;
-    /bin/busybox unzip boxeehack.zip;
+    /bin/busybox tar xf boxeehack.tar.gz;
 
     # install files
-    cp -R /download/boxeehack/hack ${INSTALLDIR};
+    cp -aR /download/boxeehack/hack ${INSTALLDIR};
 
     # cleanup
-    cd ${BASEDIR};
+    cd /;
     rm -Rf /download/boxeehack;
 
 # download the latest version from $SOURCE
@@ -52,14 +51,14 @@ else
 
     # download latest version to temporary directory
     cd /download/boxeehack;
-    /opt/local/bin/curl -L ${SOURCE} -o ${SOURCE_NAME}.zip;
-    /bin/busybox unzip ${SOURCE_NAME}.zip;
+    /opt/local/bin/curl -L ${SOURCE} -o ${SOURCE_NAME}.tar.gz;
+    /bin/busybox tar xf ${SOURCE_NAME}.tar.gz;
 
     # install files
-    cp -R /download/boxeehack/${SOURCE_NAME}/hack ${INSTALLDIR};
+    cp -aR /download/boxeehack/${SOURCE_NAME}/hack ${INSTALLDIR};
 
     # cleanup
-    cd ${BASEDIR};
+    cd /;
     rm -Rf /download/boxeehack;
 fi;
 

@@ -30,14 +30,15 @@ boxeehack_install()
     chmod +x ${INSTALLDIR}/modules-available/*;
     for module in ${INSTALLDIR}/modules-enabled/*;
     do
+        echo "Enabling ${module}...";
         ${module} enable;
     done;
 
-    cp ${INSTALLDIR}/data/advancedsettings.xml /data/.boxee/UserData/;
+    cp -aR ${INSTALLDIR}/data/advancedsettings.xml /data/.boxee/UserData/;
     sed -i 's/"hostname":"\([^;]*\);.*","p/"hostname":"\1","p/g' /data/etc/boxeehal.conf;
     sed -i 's/<hostname>\([^;]*\);.*<\/hostname>/<hostname>\1<\/hostname>/g' /data/.boxee/UserData/guisettings.xml;
-    sed -i "s/\",\"password/;sh ${INSTALLDIR}\/boxeehack start\",\"password/g" /data/etc/boxeehal.conf;
-    sed -i "s/<\/hostname>/;sh ${INSTALLDIR}\/boxeehack start\<\/hostname>/g" /data/.boxee/UserData/guisettings.xml;
+    sed -i "s%\",\"password%;sh ${INSTALLDIR}/boxeehack start\",\"password%g" /data/etc/boxeehal.conf;
+    sed -i "s%</hostname>%;sh ${INSTALLDIR}/boxeehack start\</hostname>%g" /data/.boxee/UserData/guisettings.xml;
     touch /data/etc/boxeehal.conf;
     touch /data/.boxee/UserData/guisettings.xml;
 
@@ -49,6 +50,7 @@ boxeehack_uninstall()
     echo "Uninstalling Boxee+Hacks";
     for module in ${INSTALLDIR}/modules-enabled/*;
     do
+        echo "Disabling ${module}...";
         ${module} stop;
         ${module} disable;
     done;
