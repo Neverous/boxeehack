@@ -7,15 +7,15 @@ boxeehack_start()
     if [ -z "$1" ];
     then
         echo "Starting all modules";
-        for module in ${INSTALLDIR}/modules-enabled/*;
+        for module in ${PERSISTENTDIR}/modules-enabled/*;
         do
             CONFIG=${INSTALLDIR}/config ${module} start &
         done;
 
-    elif [ -x "${INSTALLDIR}/modules-enabled/$1" ];
+    elif [ -x "${PERSISTENTDIR}/modules-enabled/$1" ];
     then
         echo "Starting $1 module.";
-        CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 start;
+        CONFIG=${INSTALLDIR}/config ${PERSISTENTDIR}/modules-enabled/$1 start;
 
     else
         echo "Invalid module!";
@@ -28,15 +28,15 @@ boxeehack_stop()
     if [ -z "$1" ];
     then
         echo "Stopping all modules";
-        for module in ${INSTALLDIR}/modules-enabled/*;
+        for module in ${PERSISTENTDIR}/modules-enabled/*;
         do
             CONFIG=${INSTALLDIR}/config ${module} stop;
         done;
 
-    elif [ -x "${INSTALLDIR}/modules-enabled/$1" ];
+    elif [ -x "${PERSISTENTDIR}/modules-enabled/$1" ];
     then
         echo "Stopping $1 module.";
-        CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 stop;
+        CONFIG=${INSTALLDIR}/config ${PERSISTENTDIR}/modules-enabled/$1 stop;
 
     else
         echo "Invalid module!";
@@ -47,14 +47,21 @@ boxeehack_stop()
 boxeehack_install()
 {
     echo "Installing Boxee+Hacks";
-    mkdir -p ${PERSISTENTDIR};
-    chmod +x ${INSTALLDIR}/bin/*;
-    # installing default modules
-    chmod +x ${INSTALLDIR}/modules-available/*;
-    for module in ${INSTALLDIR}/modules-enabled/*;
+    mkdir -p ${PERSISTENTDIR}/{modules-available,modules-enabled,bin};
+    chmod +x ${INSTALLDIR}/bin/* ${PERSISTENTDIR}/bin/*;
+    chmod +x ${INSTALLDIR}/modules-available/* ${PERSISTENTDIR}/modules-available/*;
+    # re-enabling before enabled modules
+    for module in ${PERSISTENTDIR}/modules-enabled/*;
     do
         echo "Enabling ${module}...";
         CONFIG=${INSTALLDIR}/config ${module} enable;
+    done;
+
+    # enabling default modules
+    for module in ${DEFAULT_MODULES};
+    do
+        echo "Enabling ${module}...";
+        CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-available/${module} enable;
     done;
 
     cp -aR ${INSTALLDIR}/data/advancedsettings.xml /data/.boxee/UserData/;
@@ -71,7 +78,7 @@ boxeehack_install()
 boxeehack_uninstall()
 {
     echo "Uninstalling Boxee+Hacks";
-    for module in ${INSTALLDIR}/modules-enabled/*;
+    for module in ${PERSISTENTDIR}/modules-enabled/*;
     do
         echo "Disabling ${module}...";
         CONFIG=${INSTALLDIR}/config ${module} stop;
@@ -84,7 +91,6 @@ boxeehack_uninstall()
     touch /data/etc/boxeehal.conf;
     touch /data/.boxee/UserData/guisettings.xml;
 
-    rm -Rf ${PERSISTENTDIR};
     echo "Boxee+Hacks uninstalled!";
 }
 
@@ -96,20 +102,27 @@ boxeehack_module_enable()
         exit 1;
     fi;
 
-    if [ ! -x "${INSTALLDIR}/modules-available/$1" ];
+    if [ ! -x "${INSTALLDIR}/modules-available/$1" ] && [ ! -x "${PERSISTENTDIR}/modules-available/$1" ];
     then
         echo "Module '$1' doesn't exist!";
         exit 2;
     fi;
 
-    if [ -x "${INSTALLDIR}/modules-enabled/$1" ];
+    if [ -x "${PERSISTENTDIR}/modules-enabled/$1" ];
     then
         echo "Module '$1' already enabled!";
         exit 3;
     fi;
 
-    ln -s ${INSTALLDIR}/modules-available/$1 ${INSTALLDIR}/modules-enabled/;
-    CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 enable;
+    if [ -x "${INSTALLDIR}/modules-available/$1" ];
+    then
+        ln -s ${INSTALLDIR}/modules-available/$1 ${PERSISTENTDIR}/modules-enabled/;
+    elif [ -x "${PERSISTENTDIR}/modules-available/$1" ];
+    then
+        ln -s ${PERSISTENTDIR}/modules-available/$1 ${PERSISTENTDIR}/modules-enabled/;
+    fi;
+
+    CONFIG=${INSTALLDIR}/config ${PERSISTENTDIR}/modules-enabled/$1 enable;
 }
 
 boxeehack_module_disable()
@@ -120,21 +133,21 @@ boxeehack_module_disable()
         exit 1;
     fi;
 
-    if [ ! -x "${INSTALLDIR}/modules-available/$1" ];
+    if [ ! -x "${INSTALLDIR}/modules-available/$1" ] && [ ! -x "${PERSISTENTDIR}/modules-available/$1" ];
     then
         echo "Module '$1' doesn't exist!";
         exit 2;
     fi;
 
-    if [ ! -x "${INSTALLDIR}/modules-enabled/$1" ];
+    if [ ! -x "${PERSISTENTDIR}/modules-enabled/$1" ];
     then
         echo "Module '$1' not enabled!";
         exit 4;
     fi;
 
-    CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 stop;
-    CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-enabled/$1 disable;
-    rm ${INSTALLDIR}/modules-enabled/$1;
+    CONFIG=${INSTALLDIR}/config ${PERSISTENTDIR}/modules-enabled/$1 stop;
+    CONFIG=${INSTALLDIR}/config ${PERSISTENTDIR}/modules-enabled/$1 disable;
+    rm ${PERSISTENTDIR}/modules-enabled/$1;
 }
 
 case "$1" in

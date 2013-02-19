@@ -3,11 +3,13 @@ INSTALLDIR="/data/hack";
 PERSISTENTDIR="/data/hack-persistent";
 _MODULES="/tmp/boxeehack-modules-started";
 UPGRADESCRIPT="https://raw.github.com/neverous/boxeehack/modular/install/install.sh";
-export PATH="${INSTALLDIR}/bin:$PATH";
+DEFAULT_MODULES="apps dropbear logo network skin splash writable_etc"
+export PATH="${INSTALLDIR}/bin:${PERSISTENTDIR}/bin:$PATH";
 
 started_module()
 {
     touch ${_MODULES}/.$1;
+    echo "$1 module started!";
 }
 
 require_modules()
@@ -26,4 +28,5 @@ require_modules()
 stopped_module()
 {
     rm -f ${_MODULES}/.$1;
+    echo "$1 module stopped!";
 }

@@ -19,16 +19,6 @@ module_stop()
     stopped_module "dropbear";
 }
 
-module_enable()
-{
-    echo "NOTICE: Nothing to prepare.";
-}
-
-module_disable()
-{
-    rm -Rf ${DROPBEARDIR};
-}
-
 case "$1" in
     start)
         module_start;
@@ -39,10 +29,9 @@ case "$1" in
     ;;
 
     enable)
-        module_enable;
+        echo "NOTICE: Nothing to prepare, preparations in start because of writable_etc.";
     ;;
 
     disable)
-        module_disable;
     ;;
 esac;
