@@ -60,8 +60,8 @@ boxeehack_install()
     cp -aR ${INSTALLDIR}/data/advancedsettings.xml /data/.boxee/UserData/;
     sed -i 's/"hostname":"\([^;]*\);.*","p/"hostname":"\1","p/g' /data/etc/boxeehal.conf;
     sed -i 's/<hostname>\([^;]*\);.*<\/hostname>/<hostname>\1<\/hostname>/g' /data/.boxee/UserData/guisettings.xml;
-    sed -i "s%\",\"password%;sh ${INSTALLDIR}/boxeehack start\",\"password%g" /data/etc/boxeehal.conf;
-    sed -i "s%</hostname>%;sh ${INSTALLDIR}/boxeehack start\</hostname>%g" /data/.boxee/UserData/guisettings.xml;
+    sed -i "s%\",\"password%; sh ${INSTALLDIR}/boxeehack start;\",\"password%g" /data/etc/boxeehal.conf;
+    sed -i "s%</hostname>%; sh ${INSTALLDIR}/boxeehack start;\</hostname>%g" /data/.boxee/UserData/guisettings.xml;
     touch /data/etc/boxeehal.conf;
     touch /data/.boxee/UserData/guisettings.xml;
 

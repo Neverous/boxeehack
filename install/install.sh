@@ -15,6 +15,9 @@ killall U99boxee; killall BoxeeLauncher; killall run_boxee.sh; killall Boxee; ki
 if [ -x "${INSTALLDIR}/boxeehack" ];
 then
     ${INSTALLDIR}/boxeehack stop;
+    # boxeehack stop probably turned the logo back
+    dtool 6 1 0 100;
+    dtool 6 2 0 0;
 fi;
 
 # make backup if already installed

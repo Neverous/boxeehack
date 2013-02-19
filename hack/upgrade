@@ -2,4 +2,5 @@
 . `dirname $0`/config;
 mkdir -p /download/boxeehack;
 curl -L ${UPGRADESCRIPT} -o /download/upgrade;
+cd /;
 sh /download/upgrade &
