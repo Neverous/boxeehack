@@ -170,7 +170,8 @@ def set_browser_homepage():
         template = homepage.join(template.split("$URL$"))
         common.file_put_contents("/data/hack/apps/browser2/descriptor.xml", template)
 
-        os.system("sh /data/hack/apps.sh")
+        os.system("sh /data/hack/boxeehack enable apps")
+        os.system("sh /data/hack/boxeehack start apps")
 
         common.set_string("browser-homepage", "".join(get_browser_homepage().split("http://")) )
 
@@ -269,7 +270,8 @@ def toggle_subtitles(mode, current):
             subtitles = "1"
 
         common.file_put_contents("/data/etc/.subtitles_enabled", subtitles)
-        os.system("sh /data/hack/subtitles.sh")
+        os.system("sh /data/hack/boxeehack enable subtitles")
+        os.system("sh /data/hack/boxeehack start subtitles")
         common.set_string("subtitles-plugin", subtitles)
 
     if mode == "language":
