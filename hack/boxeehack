@@ -63,7 +63,7 @@ boxeehack_install()
     for module in ${DEFAULT_MODULES};
     do
         echo "Enabling ${module}...";
-        CONFIG=${INSTALLDIR}/config ${INSTALLDIR}/modules-available/${module} enable;
+        boxeehack_module_enable ${module};
     done;
 
     cp -aR ${INSTALLDIR}/data/advancedsettings.xml /data/.boxee/UserData/;
