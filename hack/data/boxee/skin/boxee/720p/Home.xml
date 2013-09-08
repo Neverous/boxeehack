@@ -253,6 +253,9 @@
 				<animation type="Conditional" condition="StringCompare(Skin.String(homeenabled-music),1)">
 					<effect type="slide" start="0" end="-70" time="200" delay="0"/>
 				</animation>
+				<animation type="Conditional" condition="StringCompare(Skin.String(homeenabled-photos),1)">
+					<effect type="slide" start="0" end="-70" time="200" delay="0"/>
+				</animation>
 				<animation type="Conditional" condition="StringCompare(Skin.String(homeenabled-apps),1)">
 					<effect type="slide" start="0" end="-70" time="200" delay="0"/>
 				</animation>
@@ -519,6 +522,13 @@
 						<thumb>../720p/resources/icons/icon-home-pandora.png</thumb>
 						<label>2</label>
 						<onclick>RunApp(app://runpandora/)</onclick>
+					</item>
+					<item>
+						<visible>StringCompare(Skin.String(homeenabled-photos),1)</visible>
+						<controlid>118</controlid>
+						<thumb>../720p/resources/icons/icon-home-photos.png</thumb>
+						<label>Photos</label>
+						<onclick>ActivateWindow(10491,boxeeui://photos/)</onclick>
 					</item>
 					<item>
 						<visible>StringCompare(Skin.String(homeenabled-apps),1)</visible>

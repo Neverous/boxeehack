@@ -1,0 +1,39 @@
+#!/bin/sh
+. ${CONFIG};
+
+module_start()
+{
+    for m in /media/*; do
+        if [ -f ${m}/xbmc.bin ]; then
+            cd ${m};
+            /etc/rc3.d/U94boxeehal stop;
+            /etc/rc3.d/U99boxee stop;
+            killall BoxeeHal;
+            killall BoxeeLauncher;
+            killall Boxee;
+            killall run_boxee.sh;
+            mount -o bind /data/hack/xbmc.sh /opt/boxee/BoxeeLauncher;
+            break;
+        fi
+    done
+    started_module "checkxbmc";
+}
+
+module_stop()
+{
+    umount -f /opt/boxee/BoxeeLauncher;
+    stopped_module "checkxbmc";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable|disable)
+    ;;
+esac;

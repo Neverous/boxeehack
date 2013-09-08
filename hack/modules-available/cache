@@ -1,0 +1,50 @@
+#!/bin/sh
+. ${CONFIG};
+
+module_start()
+{
+    found=0;
+    for m in /media/*; do
+        if [[ ${found} -ne 0 ]]; then
+            break;
+        fi;
+
+        if [[ -d ${m}/cache ]]; then
+            found=1;
+            for p in /data/.boxee/UserData/profiles/*; do
+                b=`basename ${p}`;
+                if [ ! -d ${m}/cache/${b}/Thumbnails ]; then
+                    mkdir -p ${m}/cache/${b}/Thumbnails;
+                    mkdir -p ${m}/cache/${b}/Thumbnails/Music;
+                    mkdir -p ${m}/cache/${b}/Thumbnails/Pictures;
+                    mkdir -p ${m}/cache/${b}/Thumbnails/Programs;
+                    mkdir -p ${m}/cache/${b}/Thumbnails/Video;
+                fi;
+                if [ -d ${m}/cache/${b}/Thumbnails ]; then
+                    find ${p}/Thumbnails/ -name \*.tbn | xargs rm;
+                    mount -o bind ${m}/cache/${b}/Thumbnails ${p}/Thumbnails;
+                fi;
+            done;
+        fi;
+    done;
+    started_module "cache";
+}
+
+module_stop()
+{
+    umount -f /data/.boxee/UserData/profiles/*/Thumbnails;
+    stopped_module "cache";
+}
+
+case "$1" in
+    start)
+        module_start;
+    ;;
+
+    stop)
+        module_stop;
+    ;;
+
+    enable|disable)
+    ;;
+esac;
