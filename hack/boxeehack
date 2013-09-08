@@ -19,7 +19,7 @@ boxeehack_start()
 
     else
         echo "Invalid module!";
-        exit 5;
+        return 5;
     fi;
 }
 
@@ -40,7 +40,7 @@ boxeehack_stop()
 
     else
         echo "Invalid module!";
-        exit 6;
+        return 6;
     fi;
 }
 
@@ -113,19 +113,19 @@ boxeehack_module_enable()
     if [ -z "$1" ];
     then
         echo "Module name required!";
-        exit 1;
+        return 1;
     fi;
 
     if [ ! -x "${INSTALLDIR}/modules-available/$1" ] && [ ! -x "${PERSISTENTDIR}/modules-available/$1" ];
     then
         echo "Module '$1' doesn't exist!";
-        exit 2;
+        return 2;
     fi;
 
     if [ -x "${PERSISTENTDIR}/modules-enabled/$1" ];
     then
         echo "Module '$1' already enabled!";
-        exit 3;
+        return 3;
     fi;
 
     if [ -x "${INSTALLDIR}/modules-available/$1" ];
@@ -144,19 +144,19 @@ boxeehack_module_disable()
     if [ -z "$1" ];
     then
         echo "Module name required!";
-        exit 1;
+        return 1;
     fi;
 
     if [ ! -x "${INSTALLDIR}/modules-available/$1" ] && [ ! -x "${PERSISTENTDIR}/modules-available/$1" ];
     then
         echo "Module '$1' doesn't exist!";
-        exit 2;
+        return 2;
     fi;
 
     if [ ! -x "${PERSISTENTDIR}/modules-enabled/$1" ];
     then
         echo "Module '$1' not enabled!";
-        exit 4;
+        return 4;
     fi;
 
     CONFIG=${INSTALLDIR}/config ${PERSISTENTDIR}/modules-enabled/$1 stop;
@@ -167,25 +167,31 @@ boxeehack_module_disable()
 case "$1" in
     start)
         boxeehack_start $2;
+        exit $?;
     ;;
 
     stop)
         boxeehack_stop $2;
+        exit $?;
     ;;
 
     install)
         boxeehack_install;
+        exit $?;
     ;;
 
     uninstall)
         boxeehack_uninstall;
+        exit $?;
     ;;
 
     enable)
         boxeehack_module_enable $2;
+        exit $?;
     ;;
 
     disable)
         boxeehack_module_disable $2;
+        exit $?;
     ;;
 esac;
