@@ -74,6 +74,18 @@ boxeehack_install()
     touch /data/etc/boxeehal.conf;
     touch /data/.boxee/UserData/guisettings.xml;
 
+    echo "Adding missing dropbear links..."
+    for name in dbclient dropbear dropbearkey;
+    do
+        ln -s dropbearmulti /data/hack/bin/${name};
+    done;
+
+    echo "Adding missing busybox links..."
+    for name in ftpd login passwd scp tcpsvd telnetd;
+    do
+        ln -s busybox /data/hack/bin/${name};
+    done;
+
     echo "Boxee+Hacks installed!";
 }
 
