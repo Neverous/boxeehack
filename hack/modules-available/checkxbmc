@@ -3,7 +3,7 @@
 
 module_start()
 {
-    for m in /media/*;
+    for m in /media/*/xbmc;
     do
         if [ -f ${m}/xbmc.bin ];
         then
