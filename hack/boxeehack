@@ -47,7 +47,9 @@ boxeehack_stop()
 boxeehack_install()
 {
     echo "Installing Boxee+Hacks";
-    mkdir -p ${PERSISTENTDIR}/{modules-available,modules-enabled,bin};
+    mkdir -p ${PERSISTENTDIR}/modules-available;
+    mkdir -p ${PERSISTENTDIR}/modules-enabled;
+    mkdir -p ${PERSISTENTDIR}/bin;
     chmod +x ${INSTALLDIR}/bin/* ${PERSISTENTDIR}/bin/*;
     chmod +x ${INSTALLDIR}/modules-available/* ${PERSISTENTDIR}/modules-available/*;
     # re-enabling before enabled modules

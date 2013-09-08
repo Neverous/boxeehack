@@ -3,8 +3,10 @@
 
 module_start()
 {
-    for m in /media/*; do
-        if [ -f ${m}/xbmc.bin ]; then
+    for m in /media/*;
+    do
+        if [ -f ${m}/xbmc.bin ];
+        then
             cd ${m};
             /etc/rc3.d/U94boxeehal stop;
             /etc/rc3.d/U99boxee stop;
