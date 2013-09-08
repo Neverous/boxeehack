@@ -14,7 +14,7 @@ module_start()
             killall BoxeeLauncher;
             killall Boxee;
             killall run_boxee.sh;
-            mount -o bind /data/hack/xbmc.sh /opt/boxee/BoxeeLauncher;
+            mount -o bind /data/hack/data/xbmc /opt/boxee/BoxeeLauncher;
             break;
         fi
     done
