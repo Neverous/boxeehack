@@ -5,7 +5,7 @@
 module_start()
 {
     require_modules "writable_etc";
-    telnetd -p 2323 -l ${INSTALLDIR}/data/telnet &
+    telnetd -p 2323 -l ${INSTALLDIR}/bin/telnet-wrapper &
     started_module "telnet";
 }
 
