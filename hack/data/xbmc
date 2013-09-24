@@ -4,7 +4,30 @@ do
     if [ -f ${m}/xbmc.bin ];
     then
         cd ${m};
-        HOME=${m} GCONV_PATH=${m}/gconv AE_ENGINE=active PYTHONPATH=${m}/python2.7:${m}/python2.7/lib-dynload PYTHONHOME=${m}/python2.7:${m}/python2.7/lib-dynload XBMC_HOME=${m} ${m}/xbmc.bin 2>>/tmp/xbmc.log;
+        while true;
+        do
+            HOME=${m} GCONV_PATH=${m}/gconv AE_ENGINE=active PYTHONPATH=${m}/python2.7:${m}/python2.7/lib-dynload PYTHONHOME=${m}/python2.7:${m}/python2.7/lib-dynload XBMC_HOME=${m} ${m}/xbmc.bin 2>>/tmp/xbmc.log;
+            case "$?" in
+                0) # Quit
+                ;;
+
+                64) # Shutdown
+                    poweroff;
+                    break;
+                ;;
+
+                65) # Soft reboot
+                ;;
+
+                66) # Hard reboot
+                    reboot;
+                    break;
+                ;;
+
+                *)
+                ;;
+            esac;
+        done;
         break;
     fi;
 done;
